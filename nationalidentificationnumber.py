@@ -9,7 +9,7 @@ def start():
         question = input("Do you wish to get information from Czech National Insurance Number? Please answer yes/no and push enter: ")
         if question.lower() == "yes":
             try_again()
-            second_phase()
+            completing_phase()
         elif question.lower() == "no":
             break
         else:
@@ -28,20 +28,15 @@ def try_again():
 
 # first phase checks, if the input is number, if the number has 10 digits,
 # and if the slash is included on the correct place
-def first_phase():
+def conditions():
     while True:
-        if ten_digit() + numbercheck() + slash_included() == 3:
+        if ten_digit() + numbercheck() + slash_included() + divisible11() == 4:
             return True
 
 # second phase gets information from the ID if the conditions from first phase are met
-def second_phase():
-    if first_phase() == True:
-        while True:
-            if divisible11() != 1:
-                first_phase()
-            else:
-                ID_find_info()
-                break
+def completing_phase():
+    conditions()
+    ID_find_info()
 
 #everytime the input is incorrect, this function is called
 # this function clears and replaces the number list every time the user types a new number
@@ -50,19 +45,19 @@ def appendnewlist(copy):
         number_list.clear()
         for digit in range(11):
             number_list.append(copy[digit])
-        first_phase()
+        conditions()
     except IndexError:
-        first_phase()
+        conditions()
 
 # this function checks if the length of the number is 10
 def ten_digit():
     list_length = len(number_list)
     if list_length == 11:
-        return int(1)
+        return (1)
     else:
         check_b = input("Wrong length, the input should have 10 numbers with the slash: ")
         appendnewlist(check_b)
-        return int(1)
+        return (1)
 
 # this function checks if the input is a number (exluding slash)
 def numbercheck():
@@ -73,20 +68,20 @@ def numbercheck():
         check_a = input("There are letters found in your input. Please type the numbers with the slash: ")
         appendnewlist(check_a)
     if conected_numbers.isnumeric() == True:
-        return int(1)
+        return (1)
     else:
         check_c = input("Your input is not numerical! Please type the numbers with the slash: ")
         appendnewlist(check_c)
-        return int(1)
+        return (1)
 
 # this function checks if the slash is included and if it is rightly positioned
 def slash_included():
     if number_list[6] == "/":
-        return int(1)
+        return (1)
     else:
         check_d = input("You are missing a slash / on the 7th position: ")
         appendnewlist(check_d)
-        return int(1)
+        return (1)
 
 # this function checks if the number is divisible by number 11
 def divisible11():
@@ -96,20 +91,23 @@ def divisible11():
     except ValueError:
         check_a = input("There are letters found in your input. Please type the numbers with the slash: ")
         appendnewlist(check_a)
-        return(1)
+        return (1)
     if int(conected_numbers) % 11 == 0:
         if int(conected_numbers) / 11 == 0:
             check_g = input("There is no ID card full of zeros :) Please type the ID number: ")
             appendnewlist(check_g)
-        return int(1)
+        return (1)
     else:
         check_e = input("The number should be divisible by 11. Please type the ID number: ")
         appendnewlist(check_e)
-        return(1)
+        return (1)
 
 #the function finds if there is a 0 in the first number of the day so it deletes it
 def day_of_birth():
-    day = str(number_list[4]) + str(number_list[5])
+    if number_list[4] == "0":
+        day = number_list[5]
+    else:
+        day = str(number_list[4]) + str(number_list[5])
     return day
 
 # gender check
@@ -126,28 +124,22 @@ def gender():
 
 # create ordinal suffix to the date
 def ordinal():
-    if number_list[5] == "1":
-        ordinal = "st"
-        return ordinal
-    elif number_list[5] == "2":
-        ordinal = "nd"
-        return ordinal
-    elif number_list[5] == "3":
-        ordinal = "rd"
-        return ordinal
-    else:
-        ordinal = "th"
-        return ordinal
-
+    for number, ord in [("1", "st"), ("2", "nd"), ("3", "rd")]:
+        if number_list[5] == number and number_list[4] != "1":
+            ordinal = ord
+            return ordinal
+        else:
+            ordinal = "th"
+            return ordinal
 # translate month number to month letter
 def month():
-#a month has 01-31 days
-    if number_list[4]=="0" or number_list[4]=="1" or number_list[4]=="2" or number_list[4]=="3":
-        pass
-    else:
-        check_i = input("The 5rd number in NIN is incorrect. Please correct and retry: ")
+#does a month has 01-31 days?
+    month_first = ["0", "1", "2", "3"]
+    if number_list[4] not in month_first:
+        check_i = input("The 5th number in NIN is incorrect. Please correct and retry: ")
         appendnewlist(check_i)
 
+#female has +5 on the 3rd position
     if gender() == "female":
         month_str = str(int(number_list[2])-5) + number_list[3]
     else:
