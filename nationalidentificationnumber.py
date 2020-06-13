@@ -56,8 +56,8 @@ def appendnewlist(copy):
 
 # this function checks if the length of the number is 10
 def ten_digit():
-    delkaseznamu = len(number_list)
-    if delkaseznamu == 11:
+    list_length = len(number_list)
+    if list_length == 11:
         return int(1)
     else:
         check_b = input("Wrong length, the input should have 10 numbers with the slash: ")
@@ -109,19 +109,8 @@ def divisible11():
 
 #the function finds if there is a 0 in the first number of the day so it deletes it
 def day_of_birth():
-#a month has 01-31 days
-    if number_list[4]=="0" or number_list[4]=="1" or number_list[4]=="2" or number_list[4]=="3":
-        pass
-    else:
-        check_i = input("The 5rd number in NIN is incorrect. Please correct and retry: ")
-        appendnewlist(check_i)
-# if its a female, then -5 has to be reduced from the number
-    if number_list[2] == "0" or number_list[2] == "5":
-        return number_list[3]
-    elif number_list[2] == "6" or number_list[2] == "7":
-        return str(int(number_list[2]) - 5) + number_list[3]
-    else:
-        return number_list[2]+number_list[3]
+    day = str(number_list[4]) + str(number_list[5])
+    return day
 
 # gender check
 def gender():
@@ -137,13 +126,13 @@ def gender():
 
 # create ordinal suffix to the date
 def ordinal():
-    if number_list[3] == "1":
+    if number_list[5] == "1":
         ordinal = "st"
         return ordinal
-    elif number_list[3] == "2":
+    elif number_list[5] == "2":
         ordinal = "nd"
         return ordinal
-    elif number_list[3] == "3":
+    elif number_list[5] == "3":
         ordinal = "rd"
         return ordinal
     else:
@@ -152,6 +141,13 @@ def ordinal():
 
 # translate month number to month letter
 def month():
+#a month has 01-31 days
+    if number_list[4]=="0" or number_list[4]=="1" or number_list[4]=="2" or number_list[4]=="3":
+        pass
+    else:
+        check_i = input("The 5rd number in NIN is incorrect. Please correct and retry: ")
+        appendnewlist(check_i)
+
     if gender() == "female":
         month_str = str(int(number_list[2])-5) + number_list[3]
     else:
@@ -160,6 +156,14 @@ def month():
     for number, month in month_variations.items():
         if month_str in number:
             return month
+
+# if its a female, then -5 has to be reduced from the number
+    if number_list[2] == "0" or number_list[2] == "5":
+        return number_list[3]
+    elif number_list[2] == "6" or number_list[2] == "7":
+        return str(int(number_list[2]) - 5) + number_list[3]
+    else:
+        return number_list[2]+number_list[3]
 
 def year():
     # year19xx is 1900-1999
